@@ -1,0 +1,4 @@
+mkdir ./.tmp -p
+truncate -s 0 ./.tmp/commands-fs2nii.list
+for subject_img in $(find ./ -name 'sub*nii.gz' | awk -F / '{ print $2; }'); do
+echo "mkdir ./derivatives/fs_minimal/$subject_img/mri/ -p && mri_convert ./derivatives/freesurfer/$subject_img/mri/brainmask.mgz ./derivatives/fs_minimal/$subject_img/mri/brainmask.nii.gz && mri_convert ./derivatives/freesurfer/$subject_img/mri/brainmask.mgz --apply_transform ./derivatives/freesurfer/$subject_img/mri/transforms/talairach.xfm -o ./derivatives/freesurfer/$subject_img/mri/brainmask_align.mgz && mri_convert ./derivatives/freesurfer/$subject_img/mri/brainmask_align.mgz ./derivatives/fs_minimal/$subject_img/mri/brainmask_align.nii.gz && mri_convert ./derivatives/freesurfer/$subject_img/mri/brain.finalsurfs.mgz ./derivatives/fs_minimal/$subject_img/mri/brain.finalsurfs.nii.gz" >> ./.tmp/commands-fs2nii.list; done
