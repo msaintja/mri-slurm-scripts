@@ -1,11 +1,12 @@
 #!/bin/bash
 #SBATCH -p gpu-a100
 #SBATCH --gres=gpu:1
-#SBATCH -n 10
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=16G
+#SBATCH --mem-per-cpu=24G
 #SBATCH --array=1-931:10
-#SBATCH --time=0-0:12:00
+#SBATCH --time=0-2:00:00
 #SBATCH --mail-user=martin.saintjalmes@student.unimelb.edu.au
 #SBATCH --mail-type=ALL
 
@@ -25,7 +26,11 @@ source ~/venvs/synthseg/bin/activate
 # execute line
 
 for i in {0..9}; do
-    srun -n 1  sed -n $((SLURM_ARRAY_TASK_ID+i))p $BIDS_ROOT/.tmp/commands-synthseg.list | bash &
+    if [ $((SLURM_ARRAY_TASK_ID+i)) -le 931 ]
+    then
+        sed -n $((SLURM_ARRAY_TASK_ID+i))p $BIDS_ROOT/.tmp/commands-synthseg.list | bash;
+        current_date_time="`date "+%Y-%m-%d %H:%M:%S"`";
+        echo $current_date_time;
+        wait; 
+    fi
 done
-
-wait # important to make sure the job doesn't exit before the background tasks are done

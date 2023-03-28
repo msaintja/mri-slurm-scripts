@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=24G
-#SBATCH --array=1-578
+#SBATCH --array=1-55
 #SBATCH --time=0-1:00:00
 #SBATCH --mail-user=martin.saintjalmes@student.unimelb.edu.au
 #SBATCH --mail-type=ALL
@@ -19,7 +19,6 @@ module load xvfb/1.20.8
 # Load singularity
 module load singularity/3.5.3
 
-
 # Activate pre-installed virtualenv
 # pre-ran: module load gcccore/8.3.0 python/3.7.4; virtualenv ~/venvs/3.8.6; source ~/venvs/mriqc/bin/activate; pip install mriqc
 # Install mriqc package in virtualenv -- https://dashboard.hpc.unimelb.edu.au/software/python/
@@ -31,6 +30,10 @@ module load foss/2019b
 module load ants/2.3.2-python-3.7.4
 module load fsl/6.0.1-python-3.7.4
 module load afni/22.0.06-python-3.7.4
+
+# Retrieve BIDS_ROOT as $1
+BIDS_ROOT=$1
+
 
 # Set ENV variables
 export FREESURFER_HOME=/data/gpfs/projects/punim1484/msaintjalmes/fs_synthstrip/
@@ -57,4 +60,4 @@ export FREESURFER_HOME=/data/gpfs/projects/punim1484/msaintjalmes/fs_synthstrip/
 # Disable
 
 # execute line
-sed -n ${SLURM_ARRAY_TASK_ID}p IXI-T2/.tmp/commands-mriqc.list | bash
+sed -n ${SLURM_ARRAY_TASK_ID}p $BIDS_ROOT/.tmp/commands-mriqc.list | bash
